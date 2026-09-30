@@ -28,7 +28,7 @@ public class Token {
         return status;
     }
 
-    public void setStatus(){
+    public void setStatus(String status){
         this.status = status;
     }
 

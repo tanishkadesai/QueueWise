@@ -1,31 +1,60 @@
 package com.queuewise;
 
 import com.queuewise.model.Token;
+import java.util.ArrayList;
 
 public class Main {
 
     public static void main(String[] args) {
+        ArrayList<Token> queue = new ArrayList<>();
+        queue.add(new Token(101, "Tanishka", "Bonafide Certificate"));
+        queue.add(new Token(102, "Ananya", "ID Card"));
+        queue.add(new Token(103, "Rahul", "Fee Payment"));
 
-        Token token1 = new Token(
-                101,
-                "Tanishka",
-                "Bonafide Certificate"
-        );
+        System.out.println("Before calling next token:");
+        displayQueue(queue);
 
-        Token token2 = new Token(
-                102,
-                "Rahul",
-                "Fee Payment"
-        );
+        callNextToken(queue);
+        callNextToken(queue);
 
-        Token token3 = new Token(
-                103,
-                "Ananya",
-                "ID card"
-        );
+        completeToken(queue, 101);
 
-        token1.displayToken();
-        token2.displayToken();
-        token3.displayToken();
+
+        System.out.println("\nAfter calling next token:");
+        displayQueue(queue);
+    }
+    public static void callNextToken(ArrayList<Token> queue){
+
+        for(Token token : queue){
+            if(token.getStatus().equals("WAITING")){
+                token.setStatus("SERVING");
+
+                System.out.println("\nCalling Token Number: " + token.getTokenNumber());
+                break;
+            }
+        }
+    }
+
+public static void completeToken(ArrayList<Token> queue, int tokenNumber) {
+
+    for (Token token : queue) {
+
+        if (token.getTokenNumber() == tokenNumber
+                && token.getStatus().equals("SERVING")) {
+
+            token.setStatus("COMPLETED");
+
+            System.out.println("Token " + tokenNumber + " completed!");
+            return;
+        }
+    }
+    System.out.println("Token cannot be completed.");
+}
+
+
+    public static void displayQueue(ArrayList<Token> queue){
+        for(Token token : queue){
+            token.displayToken();
+        }
     }
 }
