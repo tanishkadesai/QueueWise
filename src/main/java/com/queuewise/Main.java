@@ -44,7 +44,7 @@ public class Main {
                     System.out.print("Enter service name: ");
                     String serviceName = sc.nextLine();
 
-                    int tokenNumber = 101 + queue.size();
+                    int tokenNumber = generateTokenNumber(queue);
 
                     Token newToken = new Token(
                             tokenNumber, customerName, serviceName
@@ -126,6 +126,20 @@ public class Main {
             token.displayToken();
         }
     }
+
+
+    public static int generateTokenNumber(ArrayList<Token> queue) {
+        int highestTokenNumber = 100;
+
+        for (Token token : queue) {
+            if (token.getTokenNumber() > highestTokenNumber) {
+                highestTokenNumber = token.getTokenNumber();
+            }
+        }
+
+        return highestTokenNumber + 1;
+    }
+
 
     public static void displayStatistics(ArrayList<Token> queue) {
         int total = queue.size();
