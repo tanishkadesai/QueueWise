@@ -21,7 +21,8 @@ public class Main {
             System.out.println("3. Add New Token");
             System.out.println("4. Complete Current Token");
             System.out.println("5. View Queue Statistics");
-            System.out.println("6. Exit");
+            System.out.println("6. Cancel Token");
+            System.out.println("7. Exit");
             System.out.print("Enter your choice: ");
 
             choice = sc.nextInt();
@@ -80,6 +81,13 @@ public class Main {
                     break;
 
                 case 6:
+                    System.out.print("Enter token number to cancel: ");
+                    int cancelNumber = sc.nextInt();
+                    sc.nextLine();
+                    cancelToken(queue, cancelNumber);
+                    break;
+
+                case 7:
                     System.out.println("Exiting QueueWise. Goodbye!");
                     break;
 
@@ -87,7 +95,7 @@ public class Main {
                     System.out.println("Invalid choice. Please try again.");
             }
 
-        }while(choice!=6);
+        }while(choice!=7);
         sc.close();
 
     }
@@ -141,6 +149,32 @@ public class Main {
     }
 
 
+
+    public static void cancelToken(ArrayList<Token> queue, int tokenNumber) {
+        for (Token token : queue) {
+            if (token.getTokenNumber() == tokenNumber) {
+
+                if (token.getStatus().equals("COMPLETED")) {
+                    System.out.println("Cannot cancel a completed token.");
+                    return;
+                }
+
+                if (token.getStatus().equals("CANCELLED")) {
+                    System.out.println("This token is already cancelled.");
+                    return;
+                }
+
+                token.setStatus("CANCELLED");
+                System.out.println("Token " + tokenNumber + " cancelled successfully!");
+                return;
+            }
+        }
+
+        System.out.println("Token number not found.");
+    }
+
+
+
     public static void displayQueue(ArrayList<Token> queue){
         for(Token token : queue){
             token.displayToken();
@@ -166,6 +200,8 @@ public class Main {
         int waiting = 0;
         int serving = 0;
         int completed = 0;
+        int cancelled = 0;
+
 
         for (Token token : queue) {
             if (token.getStatus().equals("WAITING")) {
@@ -174,14 +210,16 @@ public class Main {
                 serving++;
             } else if (token.getStatus().equals("COMPLETED")) {
                 completed++;
+            } else if (token.getStatus().equals("CANCELLED")) {
+                cancelled++;
             }
         }
-
         System.out.println("\n===== Queue Statistics =====");
         System.out.println("Total Tokens     : " + total);
         System.out.println("Waiting Tokens   : " + waiting);
         System.out.println("Serving Tokens   : " + serving);
         System.out.println("Completed Tokens : " + completed);
+        System.out.println("Cancelled Tokens : " + cancelled);
         System.out.println("============================");
     }
 }
