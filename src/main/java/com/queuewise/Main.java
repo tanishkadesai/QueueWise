@@ -36,13 +36,25 @@ public class Main {
                     break;
 
                 case 3:
-                    sc.nextLine(); // Clear the leftover newline
+
+                    sc.nextLine();
 
                     System.out.print("Enter customer name: ");
-                    String customerName = sc.nextLine();
+                    String customerName = sc.nextLine().trim();
+
+                    if (customerName.isEmpty()) {
+                        System.out.println("Customer name cannot be empty.");
+                        break;
+                    }
 
                     System.out.print("Enter service name: ");
-                    String serviceName = sc.nextLine();
+                    String serviceName = sc.nextLine().trim();
+
+                    if (serviceName.isEmpty()) {
+                        System.out.println("Service name cannot be empty.");
+                        break;
+                    }
+
 
                     int tokenNumber = generateTokenNumber(queue);
 
@@ -59,7 +71,8 @@ public class Main {
                 case 4:
                     System.out.print("Enter token number to complete: ");
                     int number = sc.nextInt();
-                    completeToken(queue, number);
+                    sc.nextLine();
+                    completeToken(queue, number, sc);
                     break;
 
                 case 5:
@@ -104,21 +117,28 @@ public class Main {
     }
 
 
-    public static void completeToken(ArrayList<Token> queue, int tokenNumber) {
+    public static void completeToken(ArrayList<Token> queue, int tokenNumber, Scanner sc) {
 
     for (Token token : queue) {
 
         if (token.getTokenNumber() == tokenNumber
                 && token.getStatus().equals("SERVING")) {
+            System.out.print("Confirm completion of Token "
+                    + tokenNumber + "? (yes/no): ");
 
-            token.setStatus("COMPLETED");
-
-            System.out.println("Token " + tokenNumber + " completed!");
+            String confirmation = sc.nextLine().trim();
+            if (confirmation.equalsIgnoreCase("yes")) {
+                token.setStatus("COMPLETED");
+                System.out.println("Token " + tokenNumber + " completed!");
+            } else {
+                System.out.println("Token completion cancelled.");
+            }
             return;
         }
     }
-    System.out.println("Token cannot be completed.");
-}
+
+        System.out.println("Token cannot be completed. It may not be serving.");
+    }
 
 
     public static void displayQueue(ArrayList<Token> queue){
