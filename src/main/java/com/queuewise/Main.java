@@ -22,7 +22,8 @@ public class Main {
             System.out.println("4. Complete Current Token");
             System.out.println("5. View Queue Statistics");
             System.out.println("6. Cancel Token");
-            System.out.println("7. Exit");
+            System.out.println("7. Service-wise Queue Summary");
+            System.out.println("8. Exit");
             System.out.print("Enter your choice: ");
 
             choice = sc.nextInt();
@@ -88,6 +89,10 @@ public class Main {
                     break;
 
                 case 7:
+                    displayServiceSummary(queue);
+                    break;
+
+                case 8:
                     System.out.println("Exiting QueueWise. Goodbye!");
                     break;
 
@@ -95,7 +100,7 @@ public class Main {
                     System.out.println("Invalid choice. Please try again.");
             }
 
-        }while(choice!=7);
+        }while(choice!=8);
         sc.close();
 
     }
@@ -180,6 +185,74 @@ public class Main {
             token.displayToken();
         }
     }
+
+
+
+    public static void displayServiceSummary(ArrayList<Token> queue) {
+        System.out.println("\n===== Service-wise Queue Summary =====");
+
+        if (queue.isEmpty()) {
+            System.out.println("No tokens available.");
+            return;
+        }
+
+        ArrayList<String> services = new ArrayList<>();
+
+        // Collect unique service names
+        for (Token token : queue) {
+            String service = token.getServiceName();
+
+            boolean serviceExists = false;
+
+            for (String existingService : services) {
+                if (existingService.equalsIgnoreCase(service)) {
+                    serviceExists = true;
+                    break;
+                }
+            }
+
+            if (!serviceExists) {
+                services.add(service);
+            }
+        }
+
+        // Count each status for every service
+        for (String service : services) {
+            int waiting = 0;
+            int serving = 0;
+            int completed = 0;
+            int cancelled = 0;
+
+            for (Token token : queue) {
+                if (token.getServiceName().equalsIgnoreCase(service)) {
+                    switch (token.getStatus()) {
+                        case "WAITING":
+                            waiting++;
+                            break;
+                        case "SERVING":
+                            serving++;
+                            break;
+                        case "COMPLETED":
+                            completed++;
+                            break;
+                        case "CANCELLED":
+                            cancelled++;
+                            break;
+                    }
+                }
+            }
+
+            System.out.println("\nService: " + service);
+            System.out.println("Waiting   : " + waiting);
+            System.out.println("Serving   : " + serving);
+            System.out.println("Completed : " + completed);
+            System.out.println("Cancelled : " + cancelled);
+        }
+
+        System.out.println("\n======================================");
+    }
+
+
 
 
     public static int generateTokenNumber(ArrayList<Token> queue) {
